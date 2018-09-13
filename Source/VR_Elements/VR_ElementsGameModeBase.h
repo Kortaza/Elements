@@ -14,7 +14,8 @@ class VR_ELEMENTS_API AVR_ElementsGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
-	
+public:
+	AVR_ElementsGameModeBase();
 	
 	
 };

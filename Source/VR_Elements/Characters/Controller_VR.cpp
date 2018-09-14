@@ -3,6 +3,7 @@
 #include "Controller_VR.h"
 
 
+
 // Sets default values
 AController_VR::AController_VR(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -26,9 +27,35 @@ void AController_VR::Tick(float DeltaTime)
 
 }
 
+void AController_VR::SetCameraVR(UCameraComponent* cam)
+{
+	CameraVRRef = cam;
+}
+
 void AController_VR::SetHandType(EControllerHand type)
 {
 	HandType = type;
+}
+
+void AController_VR::SpawnElements()
+{
+	UWorld* world = GetWorld();
+	if (world)
+	{
+		FVector spawnLoc = CameraVRRef->GetComponentLocation() + (100.0f * CameraVRRef->GetForwardVector());
+		FRotator spawnRot = CameraVRRef->GetComponentRotation();
+		ElementRing = (AElementRing*)world->SpawnActor<AElementRing>(Template_ElementRing, spawnLoc, spawnRot);
+	}
+}
+
+void AController_VR::ReleaseElements()
+{
+	if (ElementRing)
+	{
+		ElementRing->DestroyOrbs();
+		ElementRing->Destroy();
+		ElementRing = 0;
+	}
 }
 
 // Called when the game starts or when spawned

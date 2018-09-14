@@ -24,6 +24,9 @@ public:		// Functionality
 protected:	// Functionality
 	virtual void BeginPlay() override;
 
+	// Inputs
+	void SpawnElements_Pressed();
+	void SpawnElements_Released();
 	
 public:		// Variables
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

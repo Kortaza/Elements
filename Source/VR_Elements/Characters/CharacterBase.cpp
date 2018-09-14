@@ -34,6 +34,23 @@ ACharacterBase::ACharacterBase(const FObjectInitializer& ObjectInitializer)
 	MotionController_Right->SetupAttachment(RootComponent);
 }
 
+
+// Called every frame
+void ACharacterBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+// Called to bind functionality to input
+void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAction("SpawnElements", IE_Pressed, this, &ACharacterBase::SpawnElements_Pressed);
+	PlayerInputComponent->BindAction("SpawnElements", IE_Released, this, &ACharacterBase::SpawnElements_Released);
+}
+
 // Called when the game starts or when spawned
 void ACharacterBase::BeginPlay()
 {
@@ -50,26 +67,24 @@ void ACharacterBase::BeginPlay()
 		ControllerVR_Left = (AController_VR*)world->SpawnActor(Template_VR_Controller, &spawnLoc, &spawnRot);
 		ControllerVR_Left->AttachToComponent(MotionController_Left, attachmentRules);
 		ControllerVR_Left->SetHandType(EControllerHand::Left);
+		ControllerVR_Left->SetCameraVR(VR_Camera);
 
 		// Spawn and attach Weapon (Right Hand)
 		spawnLoc = MotionController_Right->GetComponentLocation();
 		spawnRot = MotionController_Right->GetComponentRotation();
 		ControllerVR_Right = (AController_VR*)world->SpawnActor(Template_VR_Controller, &spawnLoc, &spawnRot);
 		ControllerVR_Right->AttachToComponent(MotionController_Right, attachmentRules);
+		ControllerVR_Right->SetHandType(EControllerHand::Right);
+		ControllerVR_Right->SetCameraVR(VR_Camera);
 	}
 }
 
-// Called every frame
-void ACharacterBase::Tick(float DeltaTime)
+void ACharacterBase::SpawnElements_Pressed()
 {
-	Super::Tick(DeltaTime);
-
+	ControllerVR_Left->SpawnElements();
 }
 
-// Called to bind functionality to input
-void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ACharacterBase::SpawnElements_Released()
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	ControllerVR_Left->ReleaseElements();
 }
-
